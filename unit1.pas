@@ -7,12 +7,13 @@ unit Unit1;
 interface
 
 uses
-  Classes, SysUtils, DateUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, LCLType, Math;
+  Classes, SysUtils, DateUtils, Forms, Controls, Graphics, Dialogs,
+  StdCtrls, LCLType, Math;
 
 type
 
   { TForm1 }
-  IntArray = array of Integer;
+  IntArray = array of integer;
 
   TForm1 = class(TForm)
     Button1: TButton;
@@ -122,43 +123,51 @@ var
 var
   msg: string;
 var
-  kombinacja : IntArray;
+  kombinacja: IntArray;
 begin
   baza := odgZnaki.Length;
   dlugosc := StrToInt(Form1.Edit_odgDlugosc.Text);
-  SetLength(kombinacja,dlugosc);
+  SetLength(kombinacja, dlugosc);
   for j := 0 to dlugosc - 1 do
-      kombinacja[j] := 0;
+    kombinacja[j] := 0;
   max := baza ** dlugosc;
   Form1.Memo1.Append('Ilość kombinacji haseł: ' + IntToStr(max));
   czas := Now;
-  msg := '<puste>';
+  msg := '';
   for i := 0 to max - 1 do
   begin
-     Form1.Memo1.Append('i: ' + IntToStr(i));
-    if (i <> 0) And (i mod 900 = 0) then
-      Form1.Memo1.Append('Sprawdzono ' + IntToStr(i) +
-        ' kombinacji w ' + IntToStr(SecondsBetween(Now, czas)) + ' sekund. Ostatnie sprawdzone haslo: ' + msg);
-    zwiekszO := 1;
-     for j := dlugosc - 1 downto 0 do
-     begin
-       kombinacja[j] += zwiekszO;
-       if (kombinacja[j] > baza)
-       then
-           begin
-             kombinacja[j] := 0;
-             zwiekszO := 1;
-           end
-       else
-           zwiekszO := 0;
-     end;
-     msg := '';
-     for k in kombinacja do
-         msg := msg + odgZnaki[k];
-     Form1.Memo1.Append(msg);
-  end;
+    if (i <> 0) and (i mod 900 = 0) then
+      Form1.Memo1.Append('Sprawdzono ' + IntToStr(i) + ' kombinacji w ' +
+        IntToStr(SecondsBetween(Now, czas)) + ' sekund. Ostatnie sprawdzone haslo: ' + msg);
+    msg := '';
+    for k in kombinacja do
+      msg := msg + odgZnaki[k + 1];
 
-  Form1.Memo1.Refresh;
+    zwiekszO := 1;
+    for j := dlugosc - 1 downto 0 do
+    begin
+      kombinacja[j] += zwiekszO;
+      if (kombinacja[j] >= baza) then
+      begin
+        kombinacja[j] := 0;
+        zwiekszO := 1;
+      end
+      else
+        zwiekszO := 0;
+    end;
+
+    if (msg = Form1.Edit_haslo.Text) then
+    begin
+      Form1.Memo1.Append('Haslo odgadniete po ' + IntToStr(i) +
+        ' kombinacjach w ' + IntToStr(SecondsBetween(Now, czas)) +
+        ' sekund. Znalezione haslo: ' + msg);
+      exit(True);
+    end;
+  end;
+  Form1.Memo1.Append('Haslo nie zostalo odgadniete po  ' + IntToStr(i) +
+    ' kombinacjach w ' + IntToStr(SecondsBetween(Now, czas)) +
+    ' sekund. Ostatnie probowane haslo: ' + msg);
+  exit(False);
 end;
 
 function WalidacjaDlugosc: bool;
@@ -281,8 +290,8 @@ begin
   end;
   if (cyfryL < minCyfry) then
   begin
-    msg := 'Za malo cyfr. Jest ' + IntToStr(cyfryL) +
-      ' a potrzeba min ' + IntToStr(minCyfry);
+    msg := 'Za malo cyfr. Jest ' + IntToStr(cyfryL) + ' a potrzeba min ' +
+      IntToStr(minCyfry);
     Application.MessageBox(PChar(msg), 'Walidacja', MB_OK);
     exit(0);
   end;
@@ -301,7 +310,8 @@ end;
 procedure TForm1.Button_infoClick(Sender: TObject);
 begin
   Application.MessageBox(
-    'Hasła - Mateusz Macheta 141147, 2020/21, wydzial techniki i informatyki, semestr V', 'Info',
+    'Hasła - Mateusz Macheta 141147, 2020/21, wydzial techniki i informatyki, semestr V',
+    'Info',
     MB_OK);
 end;
 
@@ -393,10 +403,6 @@ begin
 end;
 
 end.
-
-
-
-
 
 
 

@@ -12,6 +12,7 @@ uses
 type
 
   { TForm1 }
+  IntArray = array of Integer;
 
   TForm1 = class(TForm)
     Button1: TButton;
@@ -115,40 +116,49 @@ end;
 
 function odgadnijHaslo: bool;
 var
-  baza, dlugosc, max, i, j, k, reszta, kandydat: integer;
+  baza, dlugosc, max, i, j, k, zwiekszO: integer;
 var
   czas: TDateTime;
 var
   msg: string;
 var
-  kombinacja : TByteArray;
+  kombinacja : IntArray;
 begin
   baza := odgZnaki.Length;
   dlugosc := StrToInt(Form1.Edit_odgDlugosc.Text);
+  SetLength(kombinacja,dlugosc);
+  for j := 0 to dlugosc - 1 do
+      kombinacja[j] := 0;
   max := baza ** dlugosc;
   Form1.Memo1.Append('Ilość kombinacji haseł: ' + IntToStr(max));
   czas := Now;
+  msg := '<puste>';
   for i := 0 to max - 1 do
   begin
-    if (i mod 1000 = 0) then
+     Form1.Memo1.Append('i: ' + IntToStr(i));
+    if (i <> 0) And (i mod 900 = 0) then
       Form1.Memo1.Append('Sprawdzono ' + IntToStr(i) +
-        ' kombinacji w ' + IntToStr(SecondsBetween(Now, czas)) + ' sekund.');
-    reszta := i;
-     for j := 0 to dlugosc - 1 do
+        ' kombinacji w ' + IntToStr(SecondsBetween(Now, czas)) + ' sekund. Ostatnie sprawdzone haslo: ' + msg);
+    zwiekszO := 1;
+     for j := dlugosc - 1 downto 0 do
      begin
-       if (reszta = 0)
-          then
-          break;
-       kombinacja[j] := reszta Mod baza**j;
-       reszta := reszta - kombinacja[j];
-       //msg :=   'kombinacja[' + IntToStr(j) + '] = ' + IntToStr(kombinacja[j]);
-       //Application.MessageBox(Pchar(msg),'Walidacja', MB_OK);
+       kombinacja[j] += zwiekszO;
+       if (kombinacja[j] > baza)
+       then
+           begin
+             kombinacja[j] := 0;
+             zwiekszO := 1;
+           end
+       else
+           zwiekszO := 0;
      end;
      msg := '';
      for k in kombinacja do
          msg := msg + odgZnaki[k];
      Form1.Memo1.Append(msg);
   end;
+
+  Form1.Memo1.Refresh;
 end;
 
 function WalidacjaDlugosc: bool;

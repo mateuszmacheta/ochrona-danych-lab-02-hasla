@@ -60,7 +60,6 @@ type
     procedure CheckBox2Change(Sender: TObject);
     procedure CheckBox3Change(Sender: TObject);
     procedure CheckBox4Change(Sender: TObject);
-    procedure CheckBox5Change(Sender: TObject);
     procedure Edit_hasloChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure odgCyfryChange(Sender: TObject);
@@ -217,10 +216,8 @@ begin
 end;
 
 function WalidacjaPolskie(litera: char): integer;
-// todo
 begin
-  if litera in [char(33)..char(47), char(58)..char(64), char(91)..char(
-    96), char(123)..char(126)] then
+  if litera > char(127) then
     exit(1);
   exit(0);
 end;

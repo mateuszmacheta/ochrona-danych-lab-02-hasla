@@ -217,10 +217,8 @@ begin
 end;
 
 function WalidacjaPolskie(litera: char): integer;
-// todo
 begin
-  if litera in [char(33)..char(47), char(58)..char(64), char(91)..char(
-    96), char(123)..char(126)] then
+  if litera > char(127) then
     exit(1);
   exit(0);
 end;
@@ -404,11 +402,6 @@ begin
   Edit_specjalMin.Enabled := CheckBox4.Checked;
   if Edit_specjalMin.GetTextLen = 0 then
     Edit_specjalMin.Text := '1';
-end;
-
-procedure TForm1.CheckBox5Change(Sender: TObject);
-begin
-  CheckBox4.Checked := Not Checkbox5.Checked;
 end;
 
 procedure TForm1.Edit_hasloChange(Sender: TObject);

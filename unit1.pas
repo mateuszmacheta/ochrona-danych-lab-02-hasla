@@ -25,6 +25,9 @@ type
     CheckBox2: TCheckBox;
     CheckBox3: TCheckBox;
     CheckBox4: TCheckBox;
+    CheckBox5: TCheckBox;
+    CheckBox6: TCheckBox;
+    Label6: TLabel;
     Memo1: TMemo;
     odgWielkie: TCheckBox;
     odgMale: TCheckBox;
@@ -57,6 +60,7 @@ type
     procedure CheckBox2Change(Sender: TObject);
     procedure CheckBox3Change(Sender: TObject);
     procedure CheckBox4Change(Sender: TObject);
+    procedure CheckBox5Change(Sender: TObject);
     procedure Edit_hasloChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure odgCyfryChange(Sender: TObject);
@@ -212,6 +216,15 @@ begin
   exit(0);
 end;
 
+function WalidacjaPolskie(litera: char): integer;
+// todo
+begin
+  if litera in [char(33)..char(47), char(58)..char(64), char(91)..char(
+    96), char(123)..char(126)] then
+    exit(1);
+  exit(0);
+end;
+
 function WalidacjaHasla: integer;
 var
   minWielkie, minMale, minCyfry, minSpecjal: integer;
@@ -219,6 +232,8 @@ var
   wielkieL, maleL, cyfryL, specjalL: integer;
 var
   znak: char;
+var
+  bezSpecjal, bezPolskie: bool;
 var
   msg: string;
 begin
@@ -237,6 +252,11 @@ begin
   maleL := 0;
   cyfryL := 0;
   specjalL := 0;
+
+  // wykluczenia
+  bezSpecjal := Form1.CheckBox5.Checked;
+  bezPolskie := Form1.CheckBox6.Checked;
+
   // przypisz minimalne wartosci do zmiennych jesli checkbox jest ustawiony
   if (Form1.CheckBox1.Checked) then
     minWielkie := StrToInt(Form1.Edit_wielkieMin.Text);
@@ -250,6 +270,20 @@ begin
   // sprawdz wszystkie znaki w hasle
   for znak in Form1.Edit_haslo.Text do
   begin
+    if ((bezSpecjal) and (WalidacjaSpecjalne(znak) = 1)) then
+    begin
+         msg := 'Haslo niepoprawne: wystepuja znaki specjalne';
+         Application.MessageBox(PChar(msg), 'Walidacja', MB_OK);
+         exit(0);
+    end;
+
+    if ((bezPolskie) and (WalidacjaPolskie(znak) = 1)) then
+    begin
+         msg := 'Haslo niepoprawne: wystepuja polskie znaki diakrytyczne';
+         Application.MessageBox(PChar(msg), 'Walidacja', MB_OK);
+         exit(0);
+    end;
+
     if ((minWielkie > 0) and (WalidacjaWielkieLitery(znak) = 1)) then
     begin
       Inc(wielkieL);

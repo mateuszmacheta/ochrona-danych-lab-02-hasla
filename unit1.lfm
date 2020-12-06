@@ -1,11 +1,11 @@
 object Form1: TForm1
-  Left = 393
-  Height = 682
-  Top = 193
+  Left = 405
+  Height = 674
+  Top = 170
   Width = 1090
   Caption = 'Hasła - Mateusz Macheta 141147, 2020/21, wydzial techniki i informatyki, semestr V'
-  ClientHeight = 682
-  ClientWidth = 1090
+  ClientHeight = 0
+  ClientWidth = 0
   DesignTimePPI = 120
   OnCreate = FormCreate
   LCLVersion = '2.0.10.0'
@@ -59,6 +59,31 @@ object Form1: TForm1
       Width = 28
       Caption = 'Max'
       ParentColor = False
+    end
+    object Label6: TLabel
+      Left = 26
+      Height = 20
+      Top = 299
+      Width = 82
+      Caption = 'Wykluczenia'
+      ParentColor = False
+    end
+    object CheckBox5: TCheckBox
+      Left = 24
+      Height = 24
+      Top = 341
+      Width = 126
+      Caption = 'Znaki specjalne'
+      OnChange = CheckBox5Change
+      TabOrder = 2
+    end
+    object CheckBox6: TCheckBox
+      Left = 24
+      Height = 24
+      Top = 376
+      Width = 194
+      Caption = 'Polskie znaki diakrytyczne'
+      TabOrder = 3
     end
   end
   object Label1: TLabel
